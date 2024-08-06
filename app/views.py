@@ -90,7 +90,7 @@ class CategoryDelete(generics.DestroyAPIView):
 
 class AllCategoryList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [KnoxTokenAuthentication, TokenAuthentication]
+    authentication_classes = [TokenAuthentication,KnoxTokenAuthentication]
     model = Category
     serializer_class = AllCategoriesModelSerializer
     queryset = Category.objects.all()
