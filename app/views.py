@@ -89,7 +89,7 @@ class CategoryDelete(generics.DestroyAPIView):
 # For all Categories
 
 class AllCategoryList(generics.ListAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [KnoxTokenAuthentication, TokenAuthentication]
     model = Category
     serializer_class = AllCategoriesModelSerializer
@@ -109,7 +109,7 @@ class AllCategoryList(generics.ListAPIView):
 # For All Products
 
 class AllProductList(generics.ListAPIView):
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     model = Product
     serializer_class = AllProductsModelSerializer
@@ -145,9 +145,7 @@ class AllProductList(generics.ListAPIView):
     #                                                                                'users_like__comment_set').all()
     #         return queryset
 
-    @method_decorator(cache_page(30))
-    def get(self, *args, **kwargs):
-        return super().get(*args, **kwargs)
+
 
 
 class ProductDetail(generics.RetrieveAPIView):
