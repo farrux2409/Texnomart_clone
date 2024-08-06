@@ -20,7 +20,7 @@ import app
 import accounts
 from config import settings
 from rest_framework.authtoken import views
-from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from django.contrib import admin
 from django.urls import path, include
 
@@ -33,6 +33,7 @@ urlpatterns = [
                   path('accounts/', include('accounts.urls')),
                   path('api-token-auth/', views.obtain_auth_token),
                   path('__debug__/', include(debug_toolbar.urls)),
+
 
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

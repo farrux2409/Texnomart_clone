@@ -3,7 +3,8 @@ from django.urls import path, include
 from .views import *
 
 app_name = 'app'
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 urlpatterns = [
     # path('categories1/', CategoryList.as_view(), name='categories'),
@@ -33,8 +34,7 @@ urlpatterns = [
     path('attribute-value/', AttributeValuesList.as_view(), name='attribute_values'),
     path('product/<int:pk>/product-attributes/', ProductAttributesList.as_view(), name='product_attributes'),
 
-    # For JWT Authentication
+    # #     # For JWT Authentication
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-
 ]
