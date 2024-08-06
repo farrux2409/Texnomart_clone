@@ -3,7 +3,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from knox.auth import TokenAuthentication as KnoxTokenAuthentication
-from rest_framework import filters
+from rest_framework import filters, viewsets
 from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -90,7 +90,7 @@ class CategoryDelete(generics.DestroyAPIView):
 
 class AllCategoryList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [TokenAuthentication,KnoxTokenAuthentication]
+    authentication_classes = [TokenAuthentication, KnoxTokenAuthentication]
     model = Category
     serializer_class = AllCategoriesModelSerializer
     queryset = Category.objects.all()
@@ -146,8 +146,6 @@ class AllProductList(generics.ListAPIView):
     #         return queryset
 
 
-
-
 class ProductDetail(generics.RetrieveAPIView):
     model = Product
     serializer_class = ProductSerializer
@@ -157,7 +155,7 @@ class ProductDetail(generics.RetrieveAPIView):
 
 class ProductListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
-    serializer_class = AllProductsModelSerializer
+    serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
 
     @method_decorator(cache_page(30))
@@ -239,6 +237,28 @@ class ProductAttributesList(generics.ListAPIView):
     def get_queryset(self):
         product_id = self.kwargs['pk']
         return ProductAttribute.objects.filter(product_id=product_id).select_related('key', 'value', 'product')
+
+    @method_decorator(cache_page(30))
+    def get(self, *args, **kwargs):
+        return super().get(*args, **kwargs)
+
+
+# ModelViewSet
+class ProductModelViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+
+    lookup_field = 'pk'
+
+    @method_decorator(cache_page(30))
+    def get(self, *args, **kwargs):
+        return super().get(*args, **kwargs)
+
+
+class CategoryModelViewSet(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = AllCategoriesModelSerializer
+    lookup_field = 'pk'
 
     @method_decorator(cache_page(30))
     def get(self, *args, **kwargs):

@@ -1,7 +1,11 @@
 from django.urls import path, include
 from django.urls import path, include
 from .views import *
+from rest_framework.routers import DefaultRouter
 
+router = DefaultRouter()
+router.register(r'products', ProductModelViewSet, basename='product')
+router.register(r'categories', CategoryModelViewSet, basename='category')
 app_name = 'app'
 
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
@@ -37,4 +41,9 @@ urlpatterns = [
     # #     # For JWT Authentication
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # ModelViewSet
+    path('modelviewset-categories/', include(router.urls)),
+    path('modelviewset-products/', include(router.urls)),
+
 ]
