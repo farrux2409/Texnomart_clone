@@ -1,61 +1,246 @@
-from django.shortcuts import render
-
 # Create your views here.
-from django.shortcuts import render
 from django.utils.decorators import method_decorator
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.views import APIView
-from rest_framework import status, viewsets, generics, permissions
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters
 from django.views.decorators.cache import cache_page
-from .serializers import CategoryModelSerializer
-from rest_framework.response import Response
-from .models import Category
-from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework_simplejwt.authentication import JWTAuthentication
+from django_filters.rest_framework import DjangoFilterBackend
+from knox.auth import TokenAuthentication as KnoxTokenAuthentication
+from rest_framework import filters
+from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication
-from .serializers import *
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 from .models import *
+from .serializers import *
 
 
 # Create your views here.
-class CategoryList(generics.ListAPIView):
-    permission_classes = [permissions.AllowAny]
 
-    # authentication_classes = [JWTAuthentication]
-    # queryset = Category.objects.all()
-    model = Category
+# Categories CRUD ---->>
+
+# class CategoryList(generics.ListAPIView):
+#     permission_classes = [permissions.IsAuthenticated]
+#     authentication_classes = [TokenAuthentication, KnoxTokenAuthentication]
+#
+#     # authentication_classes = [JWTAuthentication]
+#     # queryset = Category.objects.all()
+#     model = Category
+#     serializer_class = CategoryModelSerializer
+#     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+#     filter_fields = ['category_name', ]
+#     search_fields = ['category_name', ]
+#     ordering_fields = ['category_name', ]
+#
+#     def get_queryset(self):
+#         queryset = Category.objects.prefetch_related('products').all()
+#         return queryset
+#
+#     @method_decorator(cache_page(30))
+#     def get(self, *args, **kwargs):
+#         return super().get(*args, **kwargs)
+
+class CategoryDetailView(generics.RetrieveAPIView):
+    queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
-    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
-    filter_fields = ['category_name', ]
-    search_fields = ['category_name', ]
-    ordering_fields = ['category_name', ]
-
-    def get_queryset(self):
-        queryset = Category.objects.prefetch_related('products').all()
-        return queryset
+    permission_classes = [permissions.AllowAny]
+    lookup_field = 'pk'
 
     @method_decorator(cache_page(30))
     def get(self, *args, **kwargs):
         return super().get(*args, **kwargs)
 
 
-class ProductList(generics.ListAPIView):
+class CategoryListCreateView(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = AllCategoriesModelSerializer
+    permission_classes = [permissions.AllowAny]
+
+    @method_decorator(cache_page(30))
+    def get(self, *args, **kwargs):
+        return super().get(*args, **kwargs)
+
+
+class CategoryDetailUpdate(generics.RetrieveUpdateAPIView):
+    model = Category
+    serializer_class = AllCategoriesModelSerializer
+    queryset = Category.objects.all()
+    lookup_field = 'pk'
+
+
+class CategoryDetailDelete(generics.RetrieveDestroyAPIView):
+    model = Category
+    serializer_class = AllCategoriesModelSerializer
+    queryset = Category.objects.all()
+    lookup_field = 'pk'
+
+
+class CategoryUpdate(generics.UpdateAPIView):
+    model = Category
+    serializer_class = AllCategoriesModelSerializer
+    queryset = Category.objects.all()
+    lookup_field = 'pk'
+
+
+class CategoryDelete(generics.DestroyAPIView):
+    model = Category
+    serializer_class = AllCategoriesModelSerializer
+    queryset = Category.objects.all()
+    lookup_field = 'pk'
+
+
+# For all Categories
+
+class AllCategoryList(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    authentication_classes = [KnoxTokenAuthentication, TokenAuthentication]
+    model = Category
+    serializer_class = AllCategoriesModelSerializer
+    queryset = Category.objects.all()
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_fields = ['category_name', ]
+    search_fields = ['category_name', ]
+    ordering_fields = ['category_name', ]
+
+    @method_decorator(cache_page(30))
+    def get(self, *args, **kwargs):
+        return super().get(*args, **kwargs)
+
+
+# Products CRUD ---->
+
+# For All Products
+
+class AllProductList(generics.ListAPIView):
     permission_classes = [permissions.AllowAny]
     authentication_classes = [JWTAuthentication]
-    # queryset = Product.objects.all()
     model = Product
-    serializer_class = ProductSerializer
+    serializer_class = AllProductsModelSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filter_fields = ['product_name', 'price']
     search_fields = ['product_name', 'price']
     ordering_fields = ['product_name', 'price']
 
     def get_queryset(self):
-        queryset = Product.objects.select_related('category').prefetch_related('attributes', 'product_images',
-                                                                               'users_like','users_like__comment_set').all()
+        queryset = Product.objects.prefetch_related(
+            'users_like',
+            'users_like__comment_set').all()
         return queryset
+
+    @method_decorator(cache_page(30))
+    def get(self, *args, **kwargs):
+        return super().get(*args, **kwargs)
+
+    # class ProductList(generics.ListAPIView):
+    #     permission_classes = [permissions.AllowAny]
+    #     authentication_classes = [JWTAuthentication]
+    #     # queryset = Product.objects.all()
+    #     model = Product
+    #     serializer_class = ProductSerializer
+    #     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    #     filter_fields = ['product_name', 'price']
+    #     search_fields = ['product_name', 'price']
+    #     ordering_fields = ['product_name', 'price']
+    #
+    #     def get_queryset(self):
+    #         queryset = Product.objects.select_related('category').prefetch_related('attributes', 'product_images',
+    #                                                                                'users_like',
+    #                                                                                'users_like__comment_set').all()
+    #         return queryset
+
+    @method_decorator(cache_page(30))
+    def get(self, *args, **kwargs):
+        return super().get(*args, **kwargs)
+
+
+class ProductDetail(generics.RetrieveAPIView):
+    model = Product
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+    lookup_field = 'pk'
+
+
+class ProductListCreateView(generics.ListCreateAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductModelSerializer
+    permission_classes = [permissions.AllowAny]
+
+    @method_decorator(cache_page(30))
+    def get(self, *args, **kwargs):
+        return super().get(*args, **kwargs)
+
+
+class ProductDetailUpdate(generics.RetrieveUpdateAPIView):
+    model = Product
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+    lookup_field = 'pk'
+
+
+class ProductDetailDelete(generics.RetrieveDestroyAPIView):
+    model = Product
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+    lookup_field = 'pk'
+
+
+class ProductUpdate(generics.UpdateAPIView):
+    model = Product
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+    lookup_field = 'pk'
+
+
+class ProductDelete(generics.DestroyAPIView):
+    model = Product
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+    lookup_field = 'pk'
+
+
+# For all Attributes
+
+
+class AttributeKeysList(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    model = Attribute
+    serializer_class = AttributeModelSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_fields = ['attribute_name', ]
+    search_fields = ['attribute_name', ]
+    ordering_fields = ['attribute_name', ]
+    queryset = Attribute.objects.all()
+
+    @method_decorator(cache_page(30))
+    def get(self, *args, **kwargs):
+        return super().get(*args, **kwargs)
+
+
+class AttributeValuesList(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    model = AttributeValue
+    serializer_class = AttributeValueModelSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_fields = ['attribute_value', ]
+    search_fields = ['attribute_value', ]
+    ordering_fields = ['attribute_value', ]
+    queryset = AttributeValue.objects.all()
+
+    @method_decorator(cache_page(30))
+    def get(self, *args, **kwargs):
+        return super().get(*args, **kwargs)
+
+
+class ProductAttributesList(generics.ListAPIView):
+    permission_classes = [permissions.AllowAny]
+    model = ProductAttribute
+    serializer_class = ProductAttributeModelSerializer
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
+    filter_fields = ['key', 'value']
+    search_fields = ['key', 'value']
+    ordering_fields = ['key', 'value']
+    queryset = Attribute.objects.all()
+
+    def get_queryset(self):
+        product_id = self.kwargs['pk']
+        return ProductAttribute.objects.filter(product_id=product_id).select_related('key', 'value', 'product')
 
     @method_decorator(cache_page(30))
     def get(self, *args, **kwargs):

@@ -90,15 +90,15 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-        # 'rest_framework.permissions.IsAuthenticated',
+        'rest_framework.permissions.IsAuthenticated',
 
 
     ],
 
     'DEFAULT_AUTHENTICATION_CLASSES': [
 
-        # 'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.authentication.TokenAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
         # 'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         'knox.auth.TokenAuthentication',
     ],
