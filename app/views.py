@@ -159,7 +159,7 @@ class ProductDetail(generics.RetrieveAPIView):
 
 class ProductListCreateView(generics.ListCreateAPIView):
     queryset = Product.objects.all()
-    serializer_class = ProductModelSerializer
+    serializer_class = AllProductsModelSerializer
     permission_classes = [permissions.AllowAny]
 
     @method_decorator(cache_page(30))
@@ -236,7 +236,7 @@ class ProductAttributesList(generics.ListAPIView):
     filter_fields = ['key', 'value']
     search_fields = ['key', 'value']
     ordering_fields = ['key', 'value']
-    queryset = Attribute.objects.all()
+    queryset = ProductAttribute.objects.all()
 
     def get_queryset(self):
         product_id = self.kwargs['pk']
