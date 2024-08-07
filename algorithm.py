@@ -177,7 +177,7 @@ class LinkedList:
 
     def add_first(self, new_data):
         new_node = Node(new_data)
-        new_node    .next = self.head
+        new_node.next = self.head
         self.head = new_node
 
     def add_last(self, new_data):
@@ -198,10 +198,27 @@ class LinkedList:
         new_node.next = prev_node.next
         prev_node.next.next = new_node
 
+    def delete_node(self, key):
+        current_node = self.head
+        if current_node and current_node.data == key:
+            self.head = current_node.next
+            current_node = None
+            return
+
+        prev = None
+        while current_node and current_node.data != key:
+            prev = current_node
+            current_node = current_node.next
+
+        if current_node is None:
+            return
+
+        prev.next = current_node.next
+        current_node = None
+
 
 nodeA = Node('A')
 nodeB = Node('B')
 nodeC = Node('C')
 nodeA.next = nodeB
 nodeB.next = nodeC
-
