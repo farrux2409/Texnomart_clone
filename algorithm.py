@@ -134,7 +134,7 @@ from collections import deque
 #     def size(self) -> int:
 #         return len(self.queue)
 
-
+#
 # class Custom_Queue:
 #     def __init__(self):
 #         self.queue = []
@@ -143,7 +143,7 @@ from collections import deque
 #         return len(self.queue) == 0
 #
 #     def enqueue(self, item) -> None:
-#         self.queue[0].push(item)
+#         self.queue.insert(0, item)
 #
 #     def dequeue(self):
 #         if not self.is_empty():
