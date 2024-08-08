@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'django_redis',
     'django_filters',
+    'import_export',
+    'openpyxl',
 
 ]
 
@@ -90,8 +92,7 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-        # 'rest_framework.permissions.IsAuthenticated',
-
+        'rest_framework.permissions.IsAuthenticated',
 
     ],
 
@@ -267,3 +268,7 @@ CACHES = {
         }, }
 }
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
+from import_export.formats.base_formats import CSV, XLSX, JSON
+
+IMPORT_FORMATS = [CSV, XLSX]
+EXPORT_FORMATS = [XLSX, CSV, JSON]

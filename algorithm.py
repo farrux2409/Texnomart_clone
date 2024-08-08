@@ -49,9 +49,9 @@ def binary_search(arr, target):
 
 # result = binary_search(arr, target)
 # if result != -1:
-#     print(f'element is indexes {result}')
+#     print(f' element is indexes {result}')
 # else:
-#     print(f'element is {target} not found')
+#     print(f' element is {target} not found')
 
 
 # stack = lifo
