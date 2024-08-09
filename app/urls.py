@@ -17,10 +17,10 @@ urlpatterns = [
     # For Categories
     path('categories/', AllCategoryList.as_view(), name='all_categories'),
     # Use Retrieve Views
-    path('category/<int:pk>/', CategoryDetailView.as_view(), name='category_detail'),
+    path('category/<slug:slug>/', CategoryDetailView.as_view(), name='category_detail'),
     path('category/add-category/', CategoryListCreateView.as_view(), name='category_add'),
-    path('category/<int:pk>/delete/', CategoryDetailDelete.as_view(), name='category_delete'),
-    path('category/<int:pk>/edit/', CategoryDetailUpdate.as_view(), name='category_edit'),
+    path('category/<slug:slug>/delete/', CategoryDetailDelete.as_view(), name='category_delete'),
+    path('category/<slug:slug>/edit/', CategoryDetailUpdate.as_view(), name='category_edit'),
 
     # For Products
     path('', AllProductList.as_view(), name='all_products'),

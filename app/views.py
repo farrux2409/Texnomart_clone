@@ -38,10 +38,15 @@ from .serializers import *
 #         return super().get(*args, **kwargs)
 
 class CategoryDetailView(generics.RetrieveAPIView):
-    queryset = Category.objects.all()
     serializer_class = CategoryModelSerializer
     permission_classes = [permissions.AllowAny]
-    lookup_field = 'pk'
+    lookup_field = 'slug'
+
+    def get_queryset(self):
+       
+        queryset = Category.objects.all()
+        return queryset
+
 
     @method_decorator(cache_page(30))
     def get(self, *args, **kwargs):
@@ -61,36 +66,54 @@ class CategoryListCreateView(generics.ListCreateAPIView):
 class CategoryDetailUpdate(generics.RetrieveUpdateAPIView):
     model = Category
     serializer_class = AllCategoriesModelSerializer
-    queryset = Category.objects.all()
-    lookup_field = 'pk'
+    lookup_field = 'slug'
+
+    def get_queryset(self):
+       
+        queryset = Category.objects.all()
+        return queryset
 
 
 class CategoryDetailDelete(generics.RetrieveDestroyAPIView):
     model = Category
     serializer_class = AllCategoriesModelSerializer
-    queryset = Category.objects.all()
-    lookup_field = 'pk'
+   
+    lookup_field = 'slug'
+
+    def get_queryset(self):
+       
+        queryset = Category.objects.all()
+        return queryset
 
 
 class CategoryUpdate(generics.UpdateAPIView):
     model = Category
     serializer_class = AllCategoriesModelSerializer
-    queryset = Category.objects.all()
-    lookup_field = 'pk'
+   
+    lookup_field = 'slug'
+    def get_queryset(self):
+       
+        queryset = Category.objects.all()
+        return queryset
 
 
 class CategoryDelete(generics.DestroyAPIView):
     model = Category
     serializer_class = AllCategoriesModelSerializer
-    queryset = Category.objects.all()
-    lookup_field = 'pk'
+    
+    lookup_field = 'slug'
+
+    def get_queryset(self):
+       
+        queryset = Category.objects.all()
+        return queryset
 
 
 # For all Categories
 
 class AllCategoryList(generics.ListAPIView):
     permission_classes = [permissions.IsAuthenticated]
-    authentication_classes = [TokenAuthentication, KnoxTokenAuthentication]
+    authentication_classes = [TokenAuthentication,]
     model = Category
     serializer_class = AllCategoriesModelSerializer
     queryset = Category.objects.all()
