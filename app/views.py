@@ -44,11 +44,11 @@ class CategoryDetailView(generics.RetrieveAPIView):
 
     def get_queryset(self):
        
-        queryset = Category.objects.all()
+        queryset = Category.objects.prefetch_related('products').all()
         return queryset
 
 
-    @method_decorator(cache_page(30))
+    @method_decorator(cache_page(10))
     def get(self, *args, **kwargs):
         return super().get(*args, **kwargs)
 
@@ -162,56 +162,88 @@ class AllProductList(generics.ListAPIView):
     #     search_fields = ['product_name', 'price']
     #     ordering_fields = ['product_name', 'price']
     #
-    #     def get_queryset(self):
-    #         queryset = Product.objects.select_related('category').prefetch_related('attributes', 'product_images',
-    #                                                                                'users_like',
-    #                                                                                'users_like__comment_set').all()
-    #         return queryset
+        # def get_queryset(self):
+        #     queryset = Product.objects.select_related('category').prefetch_related('attributes', 'product_images',
+        #                                                                            'users_like',
+        #                                                                            'users_like__comment_set').all()
+        #     return queryset
 
 
 class ProductDetail(generics.RetrieveAPIView):
     model = Product
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
+   
     lookup_field = 'pk'
+
+    def get_queryset(self):
+            queryset = Product.objects.select_related('category').prefetch_related('attributes', 'product_images',
+                                                                                   'users_like',
+                                                                                   'users_like__comment_set').all()
+            return queryset
 
 
 class ProductListCreateView(generics.ListCreateAPIView):
-    queryset = Product.objects.all()
+   
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
 
     @method_decorator(cache_page(30))
     def get(self, *args, **kwargs):
         return super().get(*args, **kwargs)
+    
+    def get_queryset(self):
+            queryset = Product.objects.select_related('category').prefetch_related('attributes', 'product_images',
+                                                                                   'users_like',
+                                                                                   'users_like__comment_set').all()
+            return queryset
 
 
 class ProductDetailUpdate(generics.RetrieveUpdateAPIView):
     model = Product
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
     lookup_field = 'pk'
+
+    def get_queryset(self):
+            queryset = Product.objects.select_related('category').prefetch_related('attributes', 'product_images',
+                                                                                   'users_like',
+                                                                                   'users_like__comment_set').all()
+            return queryset
 
 
 class ProductDetailDelete(generics.RetrieveDestroyAPIView):
     model = Product
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
     lookup_field = 'pk'
+
+    def get_queryset(self):
+            queryset = Product.objects.select_related('category').prefetch_related('attributes', 'product_images',
+                                                                                   'users_like',
+                                                                                   'users_like__comment_set').all()
+            return queryset
 
 
 class ProductUpdate(generics.UpdateAPIView):
     model = Product
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
     lookup_field = 'pk'
+
+    def get_queryset(self):
+            queryset = Product.objects.select_related('category').prefetch_related('attributes', 'product_images',
+                                                                                   'users_like',
+                                                                                   'users_like__comment_set').all()
+            return queryset
 
 
 class ProductDelete(generics.DestroyAPIView):
     model = Product
     serializer_class = ProductSerializer
-    queryset = Product.objects.all()
     lookup_field = 'pk'
+
+    def get_queryset(self):
+            queryset = Product.objects.select_related('category').prefetch_related('attributes', 'product_images',
+                                                                                   'users_like',
+                                                                                   'users_like__comment_set').all()
+            return queryset
 
 
 # For all Attributes
