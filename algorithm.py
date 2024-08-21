@@ -222,3 +222,4 @@ nodeB = Node('B')
 nodeC = Node('C')
 nodeA.next = nodeB
 nodeB.next = nodeC
+

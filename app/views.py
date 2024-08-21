@@ -112,7 +112,7 @@ class CategoryDelete(generics.DestroyAPIView):
 # For all Categories
 
 class AllCategoryList(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [TokenAuthentication,]
     model = Category
     serializer_class = AllCategoriesModelSerializer
@@ -132,7 +132,7 @@ class AllCategoryList(generics.ListAPIView):
 # For All Products
 
 class AllProductList(generics.ListAPIView):
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
     authentication_classes = [JWTAuthentication]
     model = Product
     serializer_class = AllProductsModelSerializer
