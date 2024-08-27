@@ -221,7 +221,7 @@ class ProductDetailDelete(generics.RetrieveDestroyAPIView):
                                                                                    'users_like__comment_set').all()
             return queryset
 
-
+ 
 class ProductUpdate(generics.UpdateAPIView):
     model = Product
     serializer_class = ProductSerializer
@@ -307,6 +307,7 @@ class ProductModelViewSet(viewsets.ModelViewSet):
 
     @method_decorator(cache_page(30))
     def get(self, *args, **kwargs):
+
         return super().get(*args, **kwargs)
 
 
